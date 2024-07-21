@@ -30,7 +30,7 @@ i need to do:
 # Dependencies:
 1.  sysinfo
 2.  discord-rich-presence
-3.  gui (egui-extras, eframe, image)
+3.  egui (egui-extras, eframe, image)
 4.  reqwest
 5.  serde-json
 6.  chorno (i wish i could remove this, used to adjust for timezones.)
