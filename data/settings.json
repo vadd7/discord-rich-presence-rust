@@ -1,0 +1,32 @@
+{
+  "app_settings": {
+    "appid": "1221020414004822057",
+    "auto_update": "No"
+  },
+  "activity_details": {
+    "state": "Doing Epic Things",
+    "details": "some other epic thing.",
+    "start_time": "LaunchTime",
+    "end_time": "None",
+    "assets": {
+      "large_id": "-1",
+      "large_key": "celestething_1_1_",
+      "small_key": "balls",
+      "small_id": null,
+      "large_text": "this is gay text",
+      "small_text": "",
+      "large_text_enabled": true,
+      "small_text_enabled": false
+    },
+    "party": {
+      "size_min": 69,
+      "size_max": 420
+    },
+    "buttons": [
+      {
+        "label": "epic button",
+        "url": "about:blank"
+      }
+    ]
+  }
+}

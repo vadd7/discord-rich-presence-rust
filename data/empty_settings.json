@@ -1,0 +1,32 @@
+{
+  "app_settings": {
+    "appid": "1221020414004822057",
+    "auto_update": "No"
+  },
+  "activity_details": {
+    "state": "Doing Epic Things",
+    "details": "some other epic thing.",
+    "start_time": "LocalTime",
+    "end_time": "None",
+    "assets": {
+      "large_id": null,
+      "large_key": "",
+      "small_key": "",
+      "small_id": null,
+      "large_text": "",
+      "small_text": "",
+      "large_text_enabled": false,
+      "small_text_enabled": false
+    },
+    "party": {
+      "size_min": 2,
+      "size_max": 5
+    },
+    "buttons": [
+      {
+        "label": "epic button",
+        "url": "about:blank"
+      }
+    ]
+  }
+}
