@@ -164,7 +164,7 @@ impl ButtonTrait for ActivityDetails {
 
             for i in x {
 				println!("{}, {}", &i.label, &i.url);
-                final_vec.push(activity::Button::new(&i.label, &i.url));				
+                final_vec.push(activity::Button::new(&i.label, &i.url));
             }
 
             return final_vec;
@@ -198,7 +198,7 @@ pub struct Party {
     pub size_max: i32
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub enum StartTimestampTypes {
     None,
     LaunchTime,
@@ -206,7 +206,7 @@ pub enum StartTimestampTypes {
     Number(u64)
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub enum EndTimestampTypes {
     None,
     DayEnd,

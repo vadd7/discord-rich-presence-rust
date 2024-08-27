@@ -5,7 +5,7 @@ use dropdown::{DropdownButton, DropdownTrait};
 use eframe::egui::{self, Color32, RichText};
 
 use egui_extras::{Size, StripBuilder};
-use settings_lib::{self, SettingsJson, SettingsJsonTrait};
+use settings_lib::{self, EndTimestampTypes, SettingsJson, SettingsJsonTrait, StartTimestampTypes};
 mod dropdown;
 
 
@@ -215,7 +215,7 @@ impl eframe::App for RpcApp {
 
 									ui.heading("Images: ");
 
-									let mut images_vec: Vec<DropdownButton> = [DropdownButton {
+									let mut images_vec: Vec<DropdownButton<String>> = [DropdownButton {
 										name: "None".to_owned(),
 										value: "none".to_owned()
 									}].to_vec();
@@ -251,9 +251,9 @@ impl eframe::App for RpcApp {
 									
 									ui.dropdown_menu("large image: ", large_selected_index, &images_vec);
 
-									let large_dropdown_state = ui.get_dropdown_selected("large image: ").selected;
-									self.activity_settings.activity_details.assets.large_key = if large_dropdown_state != "none" {
-										large_dropdown_state
+									let large_dropdown_state: Option<DropdownButton<String>> = ui.get_dropdown_selected("large image: ").selected;
+									self.activity_settings.activity_details.assets.large_key = if let Some(j) = large_dropdown_state {
+										j.value
 									} else {
 										"".to_owned()
 									};
@@ -262,9 +262,13 @@ impl eframe::App for RpcApp {
 
 									ui.dropdown_menu("small image: ", small_selected_index, &images_vec);
 
-									let small_dropdown_state = ui.get_dropdown_selected("small image: ").selected;
-									self.activity_settings.activity_details.assets.small_key = if small_dropdown_state != "none" {
-										small_dropdown_state
+									let small_dropdown_state: Option<DropdownButton<String>> = ui.get_dropdown_selected("small image: ").selected;
+									self.activity_settings.activity_details.assets.small_key = if let Some(j) = small_dropdown_state {
+										if j.value == "none" {
+											"".to_owned()
+										} else {
+											j.value
+										}
 									} else {
 										"".to_owned()
 									};
@@ -279,38 +283,34 @@ impl eframe::App for RpcApp {
 										settings_lib::StartTimestampTypes::Number(_) => 3,
 									};
 
-									ui.dropdown_menu("Start Timestamp", start_time_index, &[
-										DropdownButton {name: "None".to_string(), value: "None".to_string()},
-										DropdownButton {name: "launch time".to_string(), value: "launch time".to_string()},
-										DropdownButton {name: "local time".to_string(), value: "local time".to_string()},
-										DropdownButton {name: "timestamp number".to_string(), value: "number".to_string()},
+									ui.dropdown_menu::<StartTimestampTypes>("Start Timestamp", start_time_index, &[
+										DropdownButton {name: "None".to_string(), value: StartTimestampTypes::None},
+										DropdownButton {name: "launch time".to_string(), value: StartTimestampTypes::LaunchTime},
+										DropdownButton {name: "local time".to_string(), value: StartTimestampTypes::LocalTime},
+										DropdownButton {name: "timestamp number".to_string(), value: StartTimestampTypes::Number(0)},
 									].to_vec());
 
-									let start_time = ui.get_dropdown_selected("Start Timestamp").selected;
+									let mut start_time = match ui.get_dropdown_selected::<StartTimestampTypes>("Start Timestamp").selected {
+										Some(selected_button) => selected_button,
+										None => DropdownButton { name: "None".to_string(), value: StartTimestampTypes::None },
+									}.value;
 
-									let mut start_time_number: u64 = if let settings_lib::StartTimestampTypes::Number(n) = &self.activity_settings.activity_details.start_time {
+									let start_time_number: u64 = if let settings_lib::StartTimestampTypes::Number(n) = &self.activity_settings.activity_details.start_time {
 										n.clone()
 									} else { 0 };
 
 									let mut start_time_num_string = start_time_number.to_string();
 
-									if start_time == "number" {
+									if let StartTimestampTypes::Number(_) = start_time {
 										ui.horizontal(|ui| {
 											ui.label("Number: ");
 											ui.text_edit_singleline(&mut start_time_num_string);
 										});
 
-										start_time_number = start_time_num_string.parse::<u64>().unwrap_or(0);
+										start_time = StartTimestampTypes::Number(start_time_num_string.parse::<u64>().unwrap_or(0));
 									} 
 
-									let starttimestamp = match start_time.as_str() {
-										"None" => settings_lib::StartTimestampTypes::None,
-										"local time" => settings_lib::StartTimestampTypes::LocalTime,
-										"launch time" => settings_lib::StartTimestampTypes::LaunchTime,
-										_ => settings_lib::StartTimestampTypes::Number(start_time_number)
-									};
-
-									self.activity_settings.activity_details.start_time = starttimestamp;
+									self.activity_settings.activity_details.start_time = start_time;
 
 									ui.label("");
 
@@ -320,36 +320,33 @@ impl eframe::App for RpcApp {
 										settings_lib::EndTimestampTypes::Number(_) => 2,
 									};
 									
-									ui.dropdown_menu("End Timestamp", end_timestamp_index, &[
-										DropdownButton {name: "None".to_string(), value: "None".to_string()},
-										DropdownButton {name: "day end".to_string(), value: "day end".to_string()},
-										DropdownButton {name: "timestamp number".to_string(), value: "number".to_string()},
+									ui.dropdown_menu::<EndTimestampTypes>("End Timestamp", end_timestamp_index, &[
+										DropdownButton {name: "None".to_string(), value: EndTimestampTypes::None},
+										DropdownButton {name: "day end".to_string(), value: EndTimestampTypes::DayEnd},
+										DropdownButton {name: "timestamp number".to_string(), value: EndTimestampTypes::Number(0)},
 									].to_vec());
 
-									let end_time = ui.get_dropdown_selected("End Timestamp").selected;
+									let mut end_time = match ui.get_dropdown_selected::<EndTimestampTypes>("End Timestamp").selected {
+										Some(selected_button) => selected_button,
+										None => DropdownButton { name: "None".to_string(), value: EndTimestampTypes::None },
+									}.value;
 
-									let mut end_time_number: u64 = if let settings_lib::StartTimestampTypes::Number(n) = &self.activity_settings.activity_details.start_time {
+									let end_time_number: u64 = if let settings_lib::EndTimestampTypes::Number(n) = &self.activity_settings.activity_details.end_time {
 										n.clone()
 									} else { 0 };
 
 									let mut end_time_num_string = end_time_number.to_string();
 
-									if end_time == "number" {
+									if let EndTimestampTypes::Number(_) = end_time {
 										ui.horizontal(|ui| {
 											ui.label("Number: ");
 											ui.text_edit_singleline(&mut end_time_num_string);
 										});
 
-										end_time_number = end_time_num_string.parse::<u64>().unwrap_or(0);
+										end_time = EndTimestampTypes::Number(end_time_num_string.parse::<u64>().unwrap_or(0))
 									} 
 
-									let endtimestamp = match end_time.as_str() {
-										"None" => settings_lib::EndTimestampTypes::None,
-										"day end" => settings_lib::EndTimestampTypes::DayEnd,
-										_ => settings_lib::EndTimestampTypes::Number(end_time_number)
-									};
-
-									self.activity_settings.activity_details.end_time = endtimestamp;
+									self.activity_settings.activity_details.end_time = end_time;
                                 });
                                 strip.cell(|ui| {
 									ui.heading("Preview: ");

@@ -6,22 +6,21 @@
   "activity_details": {
     "state": "Doing Epic Things",
     "details": "some other epic thing.",
-    "start_time": "LaunchTime",
+    "start_time": {
+      "Number": 10000
+    },
     "end_time": "None",
     "assets": {
       "large_id": "-1",
       "large_key": "celestething_1_1_",
-      "small_key": "balls",
+      "small_key": "",
       "small_id": null,
       "large_text": "this is gay text",
       "small_text": "",
-      "large_text_enabled": true,
+      "large_text_enabled": false,
       "small_text_enabled": false
     },
-    "party": {
-      "size_min": 69,
-      "size_max": 420
-    },
+    "party": null,
     "buttons": [
       {
         "label": "epic button",

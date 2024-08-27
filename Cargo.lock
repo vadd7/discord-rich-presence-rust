@@ -996,22 +996,6 @@ dependencies = [
 
 [[package]]
 name = "discord-rich-presence"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "discord-rich-presence 0.2.4",
- "eframe",
- "egui_extras",
- "env_logger",
- "image",
- "reqwest",
- "serde",
- "serde_json",
- "sysinfo",
-]
-
-[[package]]
-name = "discord-rich-presence"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f632a41e3e97febf8edff46b1405f9875894c29e20a25c5abe566872226b3f84"
@@ -1020,6 +1004,22 @@ dependencies = [
  "serde_derive",
  "serde_json",
  "uuid",
+]
+
+[[package]]
+name = "discord-rich-presence_"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "discord-rich-presence",
+ "eframe",
+ "egui_extras",
+ "env_logger",
+ "image",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "sysinfo",
 ]
 
 [[package]]
